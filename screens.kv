@@ -1,0 +1,403 @@
+WindowManager:
+	HomeWindow:
+	ScoreCounterWindow:
+	MatchHistoryWindow:
+	TournamentWindow:
+
+<HomeWindow>:
+	name: "home"
+	GridLayout:
+		cols:1
+		size: root.width, root.height
+		Label:
+			text: ''
+			font_size: 1
+			size_hint: (.1, .1)
+		Label:
+			text: "Gut's App"
+			font_size: 50
+			size_hint: (.05, .05)
+		Label:
+			text: ''
+			font_size: 1
+			size_hint: (1, 1)
+		Button:
+			text: "Goto Tournament"
+			font_size: 32
+			size_hint: (.1, .1)
+			on_release:
+				app.root.current = "tournament"
+				root.manager.transition.direction = "down"
+		Button:
+			text: "Goto Game Scores"
+			font_size: 32
+			size_hint: (.1, .1)
+			on_release:
+				app.root.current = "matchhistory"
+				root.manager.transition.direction = "right"
+		Button:
+			text: "Goto Score Counter"
+			font_size: 32
+			size_hint: (.1, .1)
+			on_release:
+				app.root.current = "scorecounter"
+				root.manager.transition.direction = "left"
+
+<ScoreCounterWindow>
+	name: "scorecounter"
+	GridLayout:
+		cols:1
+		size: root.width, root.height
+		Label:
+			text: ''
+			font_size: 1
+			size_hint: (.05, .05)
+		GridLayout:
+			cols:2
+			TextInput:
+				id: team1_name
+				font_size: 25
+				multiline:False
+				text:'Team 1 Name'
+				halign: 'center'
+				valign: 'middle'
+                size_hint: (.7, .7)
+			TextInput:
+				id: team2_name
+				font_size: 25
+				multiline:False
+				text:'Team 2 Name'
+				halign: 'center'
+				valign: 'middle'
+                size_hint: (.7, .7)
+
+			Label:
+				text: ''
+				font_size: 1
+				size_hint: (.1, .1)
+			Label:
+				text: ''
+				font_size: 1
+				size_hint: (.1, .1)
+
+			TextInput:
+				id: score1_input
+				font_size: 32
+				multiline:False
+				text:'0'
+				halign: 'center'
+				valign: 'middle'
+                size_hint: (.8, .8)
+
+			TextInput:
+				id: score2_input
+				font_size: 32
+				multiline:False
+				text:'0'
+				halign: 'center'
+				valign: 'middle'
+                size_hint: (.8, .8)
+
+			Label:
+				text: ''
+				font_size: 1
+				size_hint: (.1, .1)
+			Label:
+				text: ''
+				font_size: 1
+				size_hint: (.1, .1)
+
+            Button:
+    			text: "+"
+    			font_size: 32
+    			on_press: root.addScore(1)
+				size_hint: (3, 3)
+
+            Button:
+    			text: "+"
+    			font_size: 32
+    			on_press: root.addScore(2)
+				size_hint: (3, 3)
+
+			Label:
+				text: ''
+				font_size: 1
+				size_hint: (.1, .1)
+			Label:
+				text: ''
+				font_size: 1
+				size_hint: (.1, .1)
+
+            Button:
+    			text: "-"
+    			font_size: 32
+    			on_press: root.subScore(1)
+				size_hint: (3, 3)
+            Button:
+    			text: "-"
+    			font_size: 32
+    			on_press: root.subScore(2)
+				size_hint: (3, 3)
+
+			Label:
+				text: ''
+				font_size: 1
+				size_hint: (.1, .1)
+			Label:
+				text: ''
+				font_size: 1
+				size_hint: (.1, .1)
+		Button:
+			text: "Submit"
+			font_size: 32
+			size_hint: (.2, .2)
+			on_press: root.submit()
+
+		Button:
+			text: "Goto home"
+			font_size: 32
+			size_hint: (.1, .1)
+			on_release:
+				app.root.current = "home"
+				root.manager.transition.direction = "left"
+
+<MatchHistoryWindow>:
+	name: "matchhistory"
+	on_enter: root.updateGames()
+	GridLayout:
+		cols:1
+		size: root.width, root.height
+		Label:
+			text: ''
+			font_size: 1
+			size_hint: (.1, .1)
+		Label:
+			text: "Gut's App"
+			font_size: 50
+			size_hint: (.05, .05)
+		Label:
+			text: ''
+			font_size: 20
+			size_hint: (.5, .5)
+		GridLayout:
+			cols:4
+			size: root.width, root.height
+			Label:
+				id: match1
+				text: root.history(1)
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				canvas.before:
+					Color:
+						rgba: 0, 0, 1, 1
+					Rectangle:
+						size: self.size
+						pos: self.pos
+					Color:
+						rgba: 1, 0, 0, 1
+				    Line:
+				    	width: 1.1
+				    	rectangle: self.x, self.y, self.width, self.height
+			Label:
+				id: match2
+				text: root.history(2)
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				canvas.before:
+					Color:
+						rgba: 0, 0, 1, 1
+					Rectangle:
+						size: self.size
+						pos: self.pos
+					Color:
+						rgba: 1, 0, 0, 1
+				    Line:
+				    	width: 1.1
+				    	rectangle: self.x, self.y, self.width, self.height
+			Label:
+				id: match3
+				text: root.history(3)
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				canvas.before:
+					Color:
+						rgba: 0, 0, 1, 1
+					Rectangle:
+						size: self.size
+						pos: self.pos
+					Color:
+						rgba: 1, 0, 0, 1
+				    Line:
+				    	width: 1.1
+				    	rectangle: self.x, self.y, self.width, self.height
+			Label:
+				id: match4
+				text: root.history(4)
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				canvas.before:
+					Color:
+						rgba: 0, 0, 1, 1
+					Rectangle:
+						size: self.size
+						pos: self.pos
+					Color:
+						rgba: 1, 0, 0, 1
+				    Line:
+				    	width: 1.1
+				    	rectangle: self.x, self.y, self.width, self.height
+			Label:
+				id: match5
+				text: root.history(5)
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				canvas.before:
+					Color:
+						rgba: 0, 0, 1, 1
+					Rectangle:
+						size: self.size
+						pos: self.pos
+					Color:
+						rgba: 1, 0, 0, 1
+				    Line:
+				    	width: 1.1
+				    	rectangle: self.x, self.y, self.width, self.height
+			Label:
+				id: match6
+				text: root.history(6)
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				canvas.before:
+					Color:
+						rgba: 0, 0, 1, 1
+					Rectangle:
+						size: self.size
+						pos: self.pos
+					Color:
+						rgba: 1, 0, 0, 1
+				    Line:
+				    	width: 1.1
+				    	rectangle: self.x, self.y, self.width, self.height
+			Label:
+				id: match7
+				text: root.history(7)
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				canvas.before:
+					Color:
+						rgba: 0, 0, 1, 1
+					Rectangle:
+						size: self.size
+						pos: self.pos
+					Color:
+						rgba: 1, 0, 0, 1
+				    Line:
+				    	width: 1.1
+				    	rectangle: self.x, self.y, self.width, self.height
+			Label:
+				id: match8
+				text: root.history(8)
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				canvas.before:
+					Color:
+						rgba: 0, 0, 1, 1
+					Rectangle:
+						size: self.size
+						pos: self.pos
+					Color:
+						rgba: 1, 0, 0, 1
+				    Line:
+				    	width: 1.1
+				    	rectangle: self.x, self.y, self.width, self.height
+		Label:
+			text: ''
+			font_size: 20
+			size_hint: (1, 1)
+		Button:
+			text: "Goto home"
+			font_size: 32
+			size_hint: (.25, .25)
+			on_release:
+				app.root.current = "home"
+				root.manager.transition.direction = "left"
+		Button:
+			text: "Goto Score Counter"
+			font_size: 32
+			size_hint: (.25, .25)
+			on_release:
+				app.root.current = "scorecounter"
+				root.manager.transition.direction = "right"
+
+<TournamentWindow>:
+	name: "tournament"
+	GridLayout:
+		cols:1
+		size: root.width, root.height
+		Label:
+			text: ''
+			font_size: 1
+			size_hint: (.1, .1)
+		Label:
+			text: "Gut's App"
+			font_size: 50
+			size_hint: (.05, .05)
+		Label:
+			text: ''
+			font_size: 20
+			size_hint: (.5, .5)
+		GridLayout:
+			cols:4
+			size: root.width, root.height
+			Label:
+				id: match1
+				text: ''
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				canvas.before:
+					Color:
+						rgba: 0, 0, 1, 1
+					Rectangle:
+						size: self.size
+						pos: self.pos
+					Color:
+						rgba: 1, 0, 0, 1
+				    Line:
+				    	width: 1.1
+				    	rectangle: self.x, self.y, self.width, self.height
+		Label:
+			text: ''
+			font_size: 20
+			size_hint: (1, 1)
+		Button:
+			text: "Goto home"
+			font_size: 32
+			size_hint: (.25, .25)
+			on_release:
+				app.root.current = "home"
+				root.manager.transition.direction = "left"
+		Button:
+			text: "Goto Score Counter"
+			font_size: 32
+			size_hint: (.25, .25)
+			on_release:
+				app.root.current = "scorecounter"
+				root.manager.transition.direction = "right"
