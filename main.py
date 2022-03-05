@@ -7,18 +7,14 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from os import path
 
-filename = 'C:/Users/Michael/Documents/Python/ScoreApp/scores.json'
+filename = 'scores.json'
 
 class HomeWindow(Screen):
     pass
 
 class ScoreCounterWindow(Screen):
     def submit(self):
-        t1 = self.ids.team1_name.text
-        t2 = self.ids.team2_name.text
-        s1 = self.ids.score1_input.text
-        s2 = self.ids.score2_input.text
-        game = {'Team1': t1, 'Team2': t2, 'Score1': s1, 'Score2': s2}
+        game = {'Team1': self.ids.team1_name.text, 'Team2': self.ids.team2_name.text, 'Score1': self.ids.score1_input.text, 'Score2': self.ids.score2_input.text}
         with open(filename, 'r+') as file:
             data = json.load(file)
             data["games"].append(game)
@@ -54,7 +50,7 @@ class MatchHistoryWindow(Screen):
                 info = info.replace('{', '')
                 info = info.replace('}', '')
                 info = info.replace("'", '')
-                return str(info)
+                return info
             else:
                 return str("N/A")
 
@@ -70,6 +66,30 @@ class MatchHistoryWindow(Screen):
 
 class TournamentWindow(Screen):
 	pass
+
+class AdminWindow(Screen):
+    def submitTeams(self):
+        with open('currentTournament.json', 'r+') as file:
+            data = json.load(file)
+            newTeam = self.ids.team_input.text
+            data["teams"].append(newTeam)
+            file.seek(0)
+            json.dump(data, file, indent = 4)
+
+    def getTeams(self):
+        with open('currentTournament.json', 'r') as file:
+            data = json.load(file)
+            return data["teams"]
+
+    def removeTeam(self, team):
+        with open('currentTournament.json', 'r+') as file:
+            data = json.load(file)
+            if team in data["teams"]:
+                data["teams"].remove(team)
+                file.truncate(0)
+                file.seek(0)
+                json.dump(data, file, indent = 4)
+                #self.ids.remove_team.values = data["teams"]
 
 class WindowManager(ScreenManager):
 	pass

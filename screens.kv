@@ -3,6 +3,7 @@ WindowManager:
 	ScoreCounterWindow:
 	MatchHistoryWindow:
 	TournamentWindow:
+	AdminWindow:
 
 <HomeWindow>:
 	name: "home"
@@ -21,6 +22,13 @@ WindowManager:
 			text: ''
 			font_size: 1
 			size_hint: (1, 1)
+		Button:
+			text: "Goto Admin Tools"
+			font_size: 32
+			size_hint: (.1, .1)
+			on_release:
+				app.root.current = "admin"
+				root.manager.transition.direction = "up"
 		Button:
 			text: "Goto Tournament"
 			font_size: 32
@@ -401,3 +409,62 @@ WindowManager:
 			on_release:
 				app.root.current = "scorecounter"
 				root.manager.transition.direction = "right"
+<AdminWindow>:
+	name: "admin"
+	GridLayout:
+		cols:1
+		size: root.width, root.height
+		Label:
+			text: ''
+			font_size: 1
+			size_hint: (.1, .1)
+		Label:
+			text: "Gut's App"
+			font_size: 50
+			size_hint: (.05, .05)
+		Label:
+			text: ''
+			font_size: 20
+			size_hint: (.5, .5)
+		GridLayout:
+			cols:2
+			size: root.width, root.height
+			TextInput:
+				id: team_input
+				font_size: 32
+				multiline:False
+				text: "Enter Team Name"
+				halign: 'center'
+				valign: 'middle'
+	            size_hint: (1, 1)
+			Button:
+				text: "Submit Team"
+				font_size: 20
+				size_hint: (1, 1)
+				halign: 'center'
+				valign: 'middle'
+				on_press: root.submitTeams()
+		Spinner:
+			id: "remove_team"
+			text: "Remove Team"
+			values: root.getTeams()
+			on_text: root.removeTeam(self.text)
+		Button:
+			text: "Start Tournament"
+			font_size: 32
+			size_hint: (.25, .25)
+			on_press: root.
+			on_release:
+				app.root.current = "home"
+				root.manager.transition.direction = "down"
+		Label:
+			text: ''
+			font_size: 20
+			size_hint: (1, 1)
+		Button:
+			text: "Goto home"
+			font_size: 32
+			size_hint: (.25, .25)
+			on_release:
+				app.root.current = "home"
+				root.manager.transition.direction = "left"
