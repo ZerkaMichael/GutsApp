@@ -355,6 +355,7 @@ WindowManager:
 
 <TournamentWindow>:
 	name: "tournament"
+	on_enter: root.getMatches()
 	GridLayout:
 		cols:1
 		size: root.width, root.height
@@ -370,27 +371,11 @@ WindowManager:
 			text: ''
 			font_size: 20
 			size_hint: (.5, .5)
-		GridLayout:
-			cols:4
-			size: root.width, root.height
-			Label:
-				id: match1
-				text: ''
-				font_size: 20
-				size_hint: (1, 1)
-				halign: 'center'
-				valign: 'middle'
-				canvas.before:
-					Color:
-						rgba: 0, 0, 1, 1
-					Rectangle:
-						size: self.size
-						pos: self.pos
-					Color:
-						rgba: 1, 0, 0, 1
-				    Line:
-				    	width: 1.1
-				    	rectangle: self.x, self.y, self.width, self.height
+		Spinner:
+			id: "current_matches"
+			text: "Current Matches"
+			values: root.teamList
+			#on_text: print(self.text)
 		Label:
 			text: ''
 			font_size: 20
@@ -453,7 +438,7 @@ WindowManager:
 			text: "Start Tournament"
 			font_size: 32
 			size_hint: (.25, .25)
-			on_press: root.
+			on_press: root.startTournament()
 			on_release:
 				app.root.current = "home"
 				root.manager.transition.direction = "down"
