@@ -355,7 +355,9 @@ WindowManager:
 
 <TournamentWindow>:
 	name: "tournament"
-	on_enter: root.getMatches()
+	on_enter:
+		root.getMatches()
+		root.getFinishedMatches()
 	GridLayout:
 		cols:1
 		size: root.width, root.height
@@ -371,11 +373,43 @@ WindowManager:
 			text: ''
 			font_size: 20
 			size_hint: (.5, .5)
+		Button:
+			text: "Next Round"
+			font_size: 32
+			size_hint: (.25, .25)
+			on_press:
+				root.nextRound()
+				app.root.current = "home"
+				root.manager.transition.direction = "up"
+		GridLayout:
+			cols:2
+			size: root.width, root.height
+			TextInput:
+				id: score1_input
+				font_size: 32
+				multiline:False
+				text:'Team 1 Score'
+				halign: 'center'
+				valign: 'middle'
+				size_hint: (.8, .8)
+			TextInput:
+				id: score2_input
+				font_size: 32
+				multiline:False
+				text:'Team 2 Score'
+				halign: 'center'
+				valign: 'middle'
+                size_hint: (.8, .8)
 		Spinner:
 			id: "current_matches"
 			text: "Current Matches"
 			values: root.teamList
-			#on_text: print(self.text)
+			on_text: root.matchSelection(self.text)
+		Spinner:
+			id: "finished_matches"
+			text: "Finished Matches"
+			values: root.finishedTeamList
+			#on_text: root.matchSelection(self.text)
 		Label:
 			text: ''
 			font_size: 20

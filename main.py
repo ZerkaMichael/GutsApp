@@ -67,14 +67,70 @@ class MatchHistoryWindow(Screen):
 
 class TournamentWindow(Screen):
     teamList = ListProperty(["[None]"])
+    finishedTeamList = ListProperty(["[None]"])
     def getMatches(self):
         with open('currentTournament.json', 'r') as file:
             data = json.load(file)
             teamList = []
             for i in range(len(data["gamedata"]["currentmatches"])):
-                temp = data["gamedata"]["currentmatches"][i]["Text"]
+                temp = str(data["gamedata"]["currentmatches"][i]["Round"]) + " | " + data["gamedata"]["currentmatches"][i]["Text"]
                 teamList.append(temp)
             self.teamList = teamList
+
+    def getFinishedMatches(self):
+        with open('currentTournament.json', 'r') as file:
+            data = json.load(file)
+            finishedTeamList = []
+            for i in range(len(data["gamedata"]["finishedmatches"])):
+                temp = str(data["gamedata"]["finishedmatches"][i]["Round"]) + " | " + data["gamedata"]["finishedmatches"][i]["Text"] + " | " + str(data["gamedata"]["finishedmatches"][i]["FinalScore"])
+                finishedTeamList.append(temp)
+            self.finishedTeamList = finishedTeamList
+
+    def matchSelection(self, text):
+        with open('currentTournament.json', 'r+') as file:
+            data = json.load(file)
+            text = text.split(" | ")
+            for i in range(len(data["gamedata"]["currentmatches"])):
+                temp = data["gamedata"]["currentmatches"][i]
+                if text[1] in temp["Text"]:
+                    temp["FinalScore"] = self.ids.score1_input.text+'-'+self.ids.score2_input.text
+                    file.seek(0)
+                    json.dump(data, file, indent = 4)
+
+    def nextRound(self):
+        with open('currentTournament.json', 'r+') as file:
+            data = json.load(file)
+            currentRound = data["gamedata"]["currentmatches"][0]["Round"]
+            round = currentRound+1
+            temp = data["gamedata"]["currentmatches"]
+            data["gamedata"]["currentmatches"] = []
+            data["gamedata"]["finishedmatches"] += temp
+            file.truncate(0)
+            file.seek(0)
+            TournamentWindow.constructNextRound(self, round, data)
+            json.dump(data, file, indent = 4)
+
+    def constructNextRound(self, round, data):
+        teams = data["gamedata"]["teams"]
+        teamCount = len(teams)
+        unmatched = list(range(0,teamCount))
+        match = 0
+        if (teamCount % 2) == 0:
+            i = 1
+            gamesAmount = teamCount/2
+            while match < gamesAmount:
+                random.shuffle(unmatched)
+                selTeam1 = unmatched[0]
+                selTeam2 = unmatched[1]
+                team1 = data["gamedata"]["teams"][selTeam1]
+                team2 = data["gamedata"]["teams"][selTeam2]
+                #print("Pair {}: {} and {}".format(i, team1, team2))
+                newMatch = {"Round": round, "Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
+                data["gamedata"]["currentmatches"].append(newMatch)
+                i += 1
+                match += 1
+                unmatched.remove(selTeam1)
+                unmatched.remove(selTeam2)
 
 class AdminWindow(Screen):
     def submitTeams(self):
@@ -117,7 +173,7 @@ class AdminWindow(Screen):
                     team1 = data["gamedata"]["teams"][selTeam1]
                     team2 = data["gamedata"]["teams"][selTeam2]
                     #print("Pair {}: {} and {}".format(i, team1, team2))
-                    newMatch = {"Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
+                    newMatch = {"Round": 1, "Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
                     data["gamedata"]["currentmatches"].append(newMatch)
                     i += 1
                     match += 1
