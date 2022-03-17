@@ -102,6 +102,7 @@ class TournamentWindow(Screen):
             data = json.load(file)
             currentRound = data["gamedata"]["currentmatches"][0]["Round"]
             round = currentRound+1
+            TournamentWindow.wlHandler(self,data)
             temp = data["gamedata"]["currentmatches"]
             data["gamedata"]["currentmatches"] = []
             data["gamedata"]["finishedmatches"] += temp
@@ -109,6 +110,48 @@ class TournamentWindow(Screen):
             file.seek(0)
             TournamentWindow.constructNextRound(self, round, data)
             json.dump(data, file, indent = 4)
+
+    def wlHandler(self, data, type):
+        if type == 0:
+            type = "Round Robin"
+        elif type == 1:
+            type = "W/L"
+        for i in range(len(data["gamedata"]["currentmatches"])):
+            score = data["gamedata"]["currentmatches"][i]["FinalScore"].split('-')
+            team1Name = data["gamedata"]["currentmatches"][i]["Team1"]
+            team2Name = data["gamedata"]["currentmatches"][i]["Team2"]
+            print(score)
+            for x in range(len(data["gamedata"]["teamdata"])):
+                if data["gamedata"]["teamdata"][x]["Team"] == team1Name:
+                    if int(score[0]) >= 21 & int(score[0]) > int(score[1]):
+                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
+                        temp = int(newWL[0])+1
+                        data["gamedata"]["teamdata"][x][type] = str(temp)+"-"+str(newWL[1])
+                        print(data["gamedata"]["teamdata"][x][type])
+                    elif int(score[1]) >= 21 & int(score[1]) > int(score[0]):
+                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
+                        temp = int(newWL[0])+1
+                        data["gamedata"]["teamdata"][x]["W/L"] = str(newWL[1])+"-"+str(temp)
+                        print(data["gamedata"]["teamdata"][x][type])
+                    else:
+                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
+                        intWL = int(newWL[1]) + 1
+                        data["gamedata"]["teamdata"][i][type] = str(newWL[0])+"-"+str(intWL)
+                if data["gamedata"]["teamdata"][x]["Team"] == team2Name:
+                    if int(score[0]) >= 21 & int(score[0]) > int(score[1]):
+                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
+                        temp = int(newWL[1])+1
+                        data["gamedata"]["teamdata"][x][type] = str(newWL[1])+"-"+str(temp)
+                        print(data["gamedata"]["teamdata"][x][type)
+                    elif int(score[1]) >= 21 & int(score[1]) > int(score[0]):
+                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
+                        temp = int(newWL[0])+1
+                        data["gamedata"]["teamdata"][x][type] = str(temp)+"-"+str(newWL[1])
+                        print(data["gamedata"]["teamdata"][x][type])
+                    else:
+                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
+                        intWL = int(newWL[1]) + 1
+                        data["gamedata"]["teamdata"][i][type] = str(newWL[0])+"-"+str(intWL)
 
     def constructNextRound(self, round, data):
         teams = data["gamedata"]["teams"]
@@ -124,7 +167,6 @@ class TournamentWindow(Screen):
                 selTeam2 = unmatched[1]
                 team1 = data["gamedata"]["teams"][selTeam1]
                 team2 = data["gamedata"]["teams"][selTeam2]
-                #print("Pair {}: {} and {}".format(i, team1, team2))
                 newMatch = {"Round": round, "Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
                 data["gamedata"]["currentmatches"].append(newMatch)
                 i += 1
@@ -163,6 +205,7 @@ class AdminWindow(Screen):
             teamCount = len(teams)
             unmatched = list(range(0,teamCount))
             match = 0
+            data["gamedata"]["gamedata"]["rrRounds"] = self.ids.roundrobin_rounds.text
             if (teamCount % 2) == 0:
                 i = 1
                 gamesAmount = teamCount/2
@@ -172,7 +215,7 @@ class AdminWindow(Screen):
                     selTeam2 = unmatched[1]
                     team1 = data["gamedata"]["teams"][selTeam1]
                     team2 = data["gamedata"]["teams"][selTeam2]
-                    #print("Pair {}: {} and {}".format(i, team1, team2))
+                    AdminWindow.constructTeamData(self, data, team1, team2)
                     newMatch = {"Round": 1, "Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
                     data["gamedata"]["currentmatches"].append(newMatch)
                     i += 1
@@ -182,6 +225,13 @@ class AdminWindow(Screen):
                 file.truncate(0)
                 file.seek(0)
                 json.dump(data, file, indent = 4)
+
+    def constructTeamData(self, data, team1, team2):
+        newTeam1 = {"Team": team1, "W/L": "0-0", "Round Robin": "0-0"}
+        newTeam2 = {"Team": team2, "W/L": "0-0", "Round Robin": "0-0"}
+        data["gamedata"]["teamdata"].append(newTeam1)
+        data["gamedata"]["teamdata"].append(newTeam2)
+
 
 class WindowManager(ScreenManager):
 	pass

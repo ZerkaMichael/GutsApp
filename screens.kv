@@ -15,7 +15,7 @@ WindowManager:
 			font_size: 1
 			size_hint: (.1, .1)
 		Label:
-			text: "Gut's App"
+			text: "Guts App"
 			font_size: 50
 			size_hint: (.05, .05)
 		Label:
@@ -180,7 +180,7 @@ WindowManager:
 			font_size: 1
 			size_hint: (.1, .1)
 		Label:
-			text: "Gut's App"
+			text: "Guts App"
 			font_size: 50
 			size_hint: (.05, .05)
 		Label:
@@ -366,7 +366,7 @@ WindowManager:
 			font_size: 1
 			size_hint: (.1, .1)
 		Label:
-			text: "Gut's App"
+			text: "Guts App"
 			font_size: 50
 			size_hint: (.05, .05)
 		Label:
@@ -438,7 +438,7 @@ WindowManager:
 			font_size: 1
 			size_hint: (.1, .1)
 		Label:
-			text: "Gut's App"
+			text: "Guts App"
 			font_size: 50
 			size_hint: (.05, .05)
 		Label:
@@ -468,6 +468,14 @@ WindowManager:
 			text: "Remove Team"
 			values: root.getTeams()
 			on_text: root.removeTeam(self.text)
+		TextInput:
+			id: roundrobin_rounds
+			font_size: 25
+			multiline:False
+			text:'Round Robin Rounds'
+			halign: 'center'
+			valign: 'middle'
+            size_hint: (.7, .7)
 		Button:
 			text: "Start Tournament"
 			font_size: 32
