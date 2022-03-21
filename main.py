@@ -102,7 +102,7 @@ class TournamentWindow(Screen):
             data = json.load(file)
             currentRound = data["gamedata"]["currentmatches"][0]["Round"]
             round = currentRound+1
-            TournamentWindow.wlHandler(self,data)
+            TournamentWindow.wlHandler(self, data, 0)
             temp = data["gamedata"]["currentmatches"]
             data["gamedata"]["currentmatches"] = []
             data["gamedata"]["finishedmatches"] += temp
@@ -120,6 +120,7 @@ class TournamentWindow(Screen):
             score = data["gamedata"]["currentmatches"][i]["FinalScore"].split('-')
             team1Name = data["gamedata"]["currentmatches"][i]["Team1"]
             team2Name = data["gamedata"]["currentmatches"][i]["Team2"]
+            dif = int(score[0])-int(score[1])
             print(score)
             for x in range(len(data["gamedata"]["teamdata"])):
                 if data["gamedata"]["teamdata"][x]["Team"] == team1Name:
@@ -127,12 +128,14 @@ class TournamentWindow(Screen):
                         newWL = data["gamedata"]["teamdata"][x][type].split('-')
                         temp = int(newWL[0])+1
                         data["gamedata"]["teamdata"][x][type] = str(temp)+"-"+str(newWL[1])
+                        data["gamedata"]["teamdata"][x]["Dif"] += dif
                         print(data["gamedata"]["teamdata"][x][type])
                     elif int(score[1]) >= 21 & int(score[1]) > int(score[0]):
                         newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                        temp = int(newWL[0])+1
-                        data["gamedata"]["teamdata"][x]["W/L"] = str(newWL[1])+"-"+str(temp)
+                        temp = int(newWL[1])+1
+                        data["gamedata"]["teamdata"][x][type] = str(newWL[0])+"-"+str(temp)
                         print(data["gamedata"]["teamdata"][x][type])
+                        data["gamedata"]["teamdata"][x]["Dif"] -= dif
                     else:
                         newWL = data["gamedata"]["teamdata"][x][type].split('-')
                         intWL = int(newWL[1]) + 1
@@ -142,37 +145,46 @@ class TournamentWindow(Screen):
                         newWL = data["gamedata"]["teamdata"][x][type].split('-')
                         temp = int(newWL[1])+1
                         data["gamedata"]["teamdata"][x][type] = str(newWL[1])+"-"+str(temp)
-                        print(data["gamedata"]["teamdata"][x][type)
+                        data["gamedata"]["teamdata"][x]["Dif"] -= dif
+                        print(data["gamedata"]["teamdata"][x][type])
                     elif int(score[1]) >= 21 & int(score[1]) > int(score[0]):
                         newWL = data["gamedata"]["teamdata"][x][type].split('-')
                         temp = int(newWL[0])+1
                         data["gamedata"]["teamdata"][x][type] = str(temp)+"-"+str(newWL[1])
                         print(data["gamedata"]["teamdata"][x][type])
+                        data["gamedata"]["teamdata"][x]["Dif"] += dif
                     else:
                         newWL = data["gamedata"]["teamdata"][x][type].split('-')
                         intWL = int(newWL[1]) + 1
                         data["gamedata"]["teamdata"][i][type] = str(newWL[0])+"-"+str(intWL)
+
+
 
     def constructNextRound(self, round, data):
         teams = data["gamedata"]["teams"]
         teamCount = len(teams)
         unmatched = list(range(0,teamCount))
         match = 0
-        if (teamCount % 2) == 0:
-            i = 1
-            gamesAmount = teamCount/2
-            while match < gamesAmount:
-                random.shuffle(unmatched)
-                selTeam1 = unmatched[0]
-                selTeam2 = unmatched[1]
-                team1 = data["gamedata"]["teams"][selTeam1]
-                team2 = data["gamedata"]["teams"][selTeam2]
-                newMatch = {"Round": round, "Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
-                data["gamedata"]["currentmatches"].append(newMatch)
-                i += 1
-                match += 1
-                unmatched.remove(selTeam1)
-                unmatched.remove(selTeam2)
+        rounds = data["gamedata"]["gamedata"][0]["rrRounds"]
+        if round <= rounds:
+            if (teamCount % 2) == 0:
+                i = 1
+                gamesAmount = teamCount/2
+                while match < gamesAmount:
+                    random.shuffle(unmatched)
+                    selTeam1 = unmatched[0]
+                    selTeam2 = unmatched[1]
+                    team1 = data["gamedata"]["teams"][selTeam1]
+                    team2 = data["gamedata"]["teams"][selTeam2]
+                    newMatch = {"Round": round, "Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
+                    data["gamedata"]["currentmatches"].append(newMatch)
+                    i += 1
+                    match += 1
+                    unmatched.remove(selTeam1)
+                    unmatched.remove(selTeam2)
+        else:
+            if (teamCount % 2) == 0:
+                print('smaids')
 
 class AdminWindow(Screen):
     def submitTeams(self):
@@ -205,13 +217,13 @@ class AdminWindow(Screen):
             teamCount = len(teams)
             unmatched = list(range(0,teamCount))
             match = 0
-            data["gamedata"]["gamedata"]["rrRounds"] = self.ids.roundrobin_rounds.text
+            data["gamedata"]["gamedata"][0]["rrRounds"] = int(self.ids.roundrobin_rounds.text)
             if (teamCount % 2) == 0:
                 i = 1
                 gamesAmount = teamCount/2
                 while match < gamesAmount:
                     random.shuffle(unmatched)
-                    selTeam1 = unmatched[0]
+                    selTeam1 = unmatched [0]
                     selTeam2 = unmatched[1]
                     team1 = data["gamedata"]["teams"][selTeam1]
                     team2 = data["gamedata"]["teams"][selTeam2]
@@ -227,8 +239,8 @@ class AdminWindow(Screen):
                 json.dump(data, file, indent = 4)
 
     def constructTeamData(self, data, team1, team2):
-        newTeam1 = {"Team": team1, "W/L": "0-0", "Round Robin": "0-0"}
-        newTeam2 = {"Team": team2, "W/L": "0-0", "Round Robin": "0-0"}
+        newTeam1 = {"Team": team1, "W/L": "0-0", "Round Robin": "0-0", "Dif": 0}
+        newTeam2 = {"Team": team2, "W/L": "0-0", "Round Robin": "0-0", "Dif": 0}
         data["gamedata"]["teamdata"].append(newTeam1)
         data["gamedata"]["teamdata"].append(newTeam2)
 

@@ -1,9 +1,9 @@
 {
     "gamedata": {
         "gamedata": [
-          {
-            "rrRounds": "0"
-          }
+            {
+                "rrRounds": 0
+            }
         ],
         "teams": [
             "test",
@@ -14,103 +14,10 @@
             "swagters"
         ],
         "teamdata": [
-            {
-                "Team": "swag",
-                "W/L": "2-0",
-                "Round Robin": "0-0"
-            },
-            {
-                "Team": "test",
-                "W/L": "1-1",
-                "Round Robin": "0-0"
-            },
-            {
-                "Team": "nhg",
-                "W/L": "1-1",
-                "Round Robin": "0-0"
-            },
-            {
-                "Team": "anotherteam",
-                "W/L": "2-0",
-                "Round Robin": "0-0"
-            },
-            {
-                "Team": "swagters",
-                "W/L": "0-1",
-                "Round Robin": "0-0"
-            },
-            {
-                "Team": "qwe",
-                "W/L": "1-1",
-                "Round Robin": "0-0"
-            }
         ],
         "currentmatches": [
-            {
-                "Round": 3,
-                "Team1": "nhg",
-                "Team2": "anotherteam",
-                "FinalScore": "0-0",
-                "Text": "nhg vs anotherteam"
-            },
-            {
-                "Round": 3,
-                "Team1": "qwe",
-                "Team2": "swag",
-                "FinalScore": "0-0",
-                "Text": "qwe vs swag"
-            },
-            {
-                "Round": 3,
-                "Team1": "test",
-                "Team2": "swagters",
-                "FinalScore": "0-0",
-                "Text": "test vs swagters"
-            }
         ],
         "finishedmatches": [
-            {
-                "Round": 1,
-                "Team1": "swag",
-                "Team2": "test",
-                "FinalScore": "21-15",
-                "Text": "swag vs test"
-            },
-            {
-                "Round": 1,
-                "Team1": "nhg",
-                "Team2": "anotherteam",
-                "FinalScore": "15-21",
-                "Text": "nhg vs anotherteam"
-            },
-            {
-                "Round": 1,
-                "Team1": "swagters",
-                "Team2": "qwe",
-                "FinalScore": "21-6",
-                "Text": "swagters vs qwe"
-            },
-            {
-                "Round": 2,
-                "Team1": "swag",
-                "Team2": "swagters",
-                "FinalScore": "21-5",
-                "Text": "swag vs swagters"
-            },
-            {
-                "Round": 2,
-                "Team1": "nhg",
-                "Team2": "qwe",
-                "FinalScore": "5-21",
-                "Text": "nhg vs qwe"
-            },
-            {
-                "Round": 2,
-                "Team1": "test",
-                "Team2": "anotherteam",
-                "FinalScore": "17-21",
-                "Text": "test vs anotherteam"
-            }
         ]
     }
 }
