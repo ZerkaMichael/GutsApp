@@ -111,6 +111,8 @@ class TournamentWindow(Screen):
             TournamentWindow.constructNextRound(self, round, data)
             json.dump(data, file, indent = 4)
 
+
+
     def wlHandler(self, data, type):
         if type == 0:
             type = "Round Robin"
@@ -123,6 +125,7 @@ class TournamentWindow(Screen):
             dif = int(score[0])-int(score[1])
             print(score)
             for x in range(len(data["gamedata"]["teamdata"])):
+                temp = 0
                 if data["gamedata"]["teamdata"][x]["Team"] == team1Name:
                     if int(score[0]) >= 21 & int(score[0]) > int(score[1]):
                         newWL = data["gamedata"]["teamdata"][x][type].split('-')
@@ -136,15 +139,11 @@ class TournamentWindow(Screen):
                         data["gamedata"]["teamdata"][x][type] = str(newWL[0])+"-"+str(temp)
                         print(data["gamedata"]["teamdata"][x][type])
                         data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                    else:
-                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                        intWL = int(newWL[1]) + 1
-                        data["gamedata"]["teamdata"][i][type] = str(newWL[0])+"-"+str(intWL)
                 if data["gamedata"]["teamdata"][x]["Team"] == team2Name:
                     if int(score[0]) >= 21 & int(score[0]) > int(score[1]):
                         newWL = data["gamedata"]["teamdata"][x][type].split('-')
                         temp = int(newWL[1])+1
-                        data["gamedata"]["teamdata"][x][type] = str(newWL[1])+"-"+str(temp)
+                        data["gamedata"]["teamdata"][x][type] = str(newWL[0])+"-"+str(temp)
                         data["gamedata"]["teamdata"][x]["Dif"] -= dif
                         print(data["gamedata"]["teamdata"][x][type])
                     elif int(score[1]) >= 21 & int(score[1]) > int(score[0]):
@@ -153,10 +152,6 @@ class TournamentWindow(Screen):
                         data["gamedata"]["teamdata"][x][type] = str(temp)+"-"+str(newWL[1])
                         print(data["gamedata"]["teamdata"][x][type])
                         data["gamedata"]["teamdata"][x]["Dif"] += dif
-                    else:
-                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                        intWL = int(newWL[1]) + 1
-                        data["gamedata"]["teamdata"][i][type] = str(newWL[0])+"-"+str(intWL)
 
 
 
@@ -185,6 +180,14 @@ class TournamentWindow(Screen):
         else:
             if (teamCount % 2) == 0:
                 print('smaids')
+
+    def seedCalculation(self, data):
+        for i in range(len(data["gamedata"]["teamdata"])):
+            name = data["gamedata"]["teamdata"][i]["Team"]
+            rr = data["gamedata"]["teamdata"][i]["Round Robin"].split('-')
+            dif = data["gamedata"]["teamdata"][i]["Dif"]
+
+
 
 class AdminWindow(Screen):
     def submitTeams(self):
