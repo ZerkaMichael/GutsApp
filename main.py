@@ -8,15 +8,13 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from os import path
 
-filename = 'scores.json'
-
 class HomeWindow(Screen):
     pass
 
 class ScoreCounterWindow(Screen):
     def submit(self):
         game = {'Team1': self.ids.team1_name.text, 'Team2': self.ids.team2_name.text, 'Score1': self.ids.score1_input.text, 'Score2': self.ids.score2_input.text}
-        with open(filename, 'r+') as file:
+        with open('scores.json', 'r+') as file:
             data = json.load(file)
             data["games"].append(game)
             file.seek(0)
@@ -44,7 +42,7 @@ class ScoreCounterWindow(Screen):
 
 class MatchHistoryWindow(Screen):
     def history(self, i):
-        with open(filename, 'r+') as file:
+        with open('scores.json', 'r+') as file:
             data = json.load(file)
             if i <= len(data["games"]):
                 info = str(data["games"][-abs(i)]).replace(', ', '\n')
@@ -162,26 +160,24 @@ class TournamentWindow(Screen):
         unmatched = list(range(0,teamCount))
         match = 0
         rounds = data["gamedata"]["gamedata"][0]["rrRounds"]
-        if round <= rounds:
-            if (teamCount % 2) == 0:
-                gamesAmount = teamCount/2
-                while match < gamesAmount:
-                    random.shuffle(unmatched)
-                    selTeam1 = unmatched[0]
-                    selTeam2 = unmatched[1]
-                    team1 = data["gamedata"]["teams"][selTeam1]
-                    team2 = data["gamedata"]["teams"][selTeam2]
-                    newMatch = {"Round": round, "Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
-                    data["gamedata"]["currentmatches"].append(newMatch)
-                    match += 1
-                    unmatched.remove(selTeam1)
-                    unmatched.remove(selTeam2)
+        if round <= rounds & (teamCount % 2) == 0:
+            gamesAmount = teamCount/2
+            while match < gamesAmount:
+                random.shuffle(unmatched)
+                selTeam1 = unmatched[0]
+                selTeam2 = unmatched[1]
+                team1 = data["gamedata"]["teams"][selTeam1]
+                team2 = data["gamedata"]["teams"][selTeam2]
+                newMatch = {"Round": round, "Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
+                data["gamedata"]["currentmatches"].append(newMatch)
+                match += 1
+                unmatched.remove(selTeam1)
+                unmatched.remove(selTeam2)
         elif round == rounds + 1:
-            if (teamCount % 2) == 0:
-                TournamentWindow.seedCalculation(self, data)
-                TournamentWindow.bracketBuilder(self, data, teams, teamCount)
+            TournamentWindow.seedCalculation(self, data)
+            TournamentWindow.bracketBuilder(self, data, teams, teamCount)
         else:
-            pass
+            TournamentWindow.progressBracket(self, data)
 
     def seedCalculation(self, data):
         names = []
@@ -197,11 +193,8 @@ class TournamentWindow(Screen):
         while unSeeded > 0:
             seedName = ''
             for i in range(len(rrws)):
-                #if rrws[i] == max(rrws):
                 if difs[i] == max(difs):
-                    print(rrws[i], difs[i], max(rrws), max(difs))
                     seedName = names[i]
-                    print(seedName)
             for x in range(len(data["gamedata"]["teamdata"])):
                 if data["gamedata"]["teamdata"][x]["Team"] == seedName:
                     data["gamedata"]["teamdata"][x]["Seed"] = seed
@@ -221,15 +214,16 @@ class TournamentWindow(Screen):
                     if data["gamedata"]["teamdata"][i]["Seed"] == seed:
                         unmatched.append(data["gamedata"]["teamdata"][i]["Team"])
                         seed += 1
-            print(unmatched)
             while len(unmatched) > 0:
                 selTeam1 = unmatched[0]
                 selTeam2 = unmatched[-1]
-                print(selTeam1,selTeam2)
                 newMatch = {"Round": "B-1", "Team1": selTeam1, "Team2": selTeam2, "FinalScore": "0-0", "Text": selTeam1+" vs "+selTeam2}
                 data["gamedata"]["currentmatches"].append(newMatch)
                 unmatched.remove(selTeam1)
                 unmatched.remove(selTeam2)
+
+    def progressBracket(self, data):
+        pass
 
 class AdminWindow(Screen):
     def submitTeams(self):
