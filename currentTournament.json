@@ -1,17 +1,14 @@
 {
     "gamedata": {
+        "finish": [],
         "gamedata": [
             {
                 "rrRounds": 0
             }
         ],
-        "teams": [
-        ],
-        "teamdata": [
-        ],
-        "currentmatches": [
-        ],
-        "finishedmatches": [
-        ]
+        "teams": [],
+        "teamdata": [],
+        "currentmatches": [],
+        "finishedmatches": []
     }
 }

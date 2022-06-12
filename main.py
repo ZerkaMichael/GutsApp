@@ -109,9 +109,9 @@ class TournamentWindow(Screen):
             temp = data["gamedata"]["currentmatches"]
             data["gamedata"]["currentmatches"] = []
             data["gamedata"]["finishedmatches"] += temp
+            TournamentWindow.constructNextRound(self, round, data)
             file.truncate(0)
             file.seek(0)
-            TournamentWindow.constructNextRound(self, round, data)
             json.dump(data, file, indent = 4)
 
     def wlHandler(self, data, type):
@@ -140,7 +140,7 @@ class TournamentWindow(Screen):
                         data["gamedata"]["teamdata"][x][type] = str(newWL[0])+"-"+str(temp)
                         print(data["gamedata"]["teamdata"][x][type])
                         data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                if data["gamedata"]["teamdata"][x]["Team"] == team2Name:
+                elif data["gamedata"]["teamdata"][x]["Team"] == team2Name:
                     if int(score[0]) >= 21 & int(score[0]) > int(score[1]):
                         newWL = data["gamedata"]["teamdata"][x][type].split('-')
                         temp = int(newWL[1])+1
@@ -160,7 +160,7 @@ class TournamentWindow(Screen):
         unmatched = list(range(0,teamCount))
         match = 0
         rounds = data["gamedata"]["gamedata"][0]["rrRounds"]
-        if round <= rounds & (teamCount % 2) == 0:
+        if round <= rounds:
             gamesAmount = teamCount/2
             while match < gamesAmount:
                 random.shuffle(unmatched)
@@ -175,9 +175,13 @@ class TournamentWindow(Screen):
                 unmatched.remove(selTeam2)
         elif round == rounds + 1:
             TournamentWindow.seedCalculation(self, data)
-            TournamentWindow.bracketBuilder(self, data, teams, teamCount)
-        else:
-            TournamentWindow.progressBracket(self, data)
+            TournamentWindow.bracketBuilder(self, data, teams, teamCount, round)
+        elif round > rounds + 1 and round != teamCount:
+            TournamentWindow.progressBracket(self, data, teamCount, round)
+        elif round == teamCount:
+            TournamentWindow.determineWinner(self, data, round, teamCount)
+
+
 
     def seedCalculation(self, data):
         names = []
@@ -206,24 +210,66 @@ class TournamentWindow(Screen):
                     names.remove(seedName)
 
     def bracketBuilder(self, data, teams, seeds):
-        if (seeds % 2) == 0:
-            unmatched = []
-            seed = 1
-            while seed <= seeds:
-                for i in range(len(data["gamedata"]["teamdata"])):
-                    if data["gamedata"]["teamdata"][i]["Seed"] == seed:
-                        unmatched.append(data["gamedata"]["teamdata"][i]["Team"])
-                        seed += 1
-            while len(unmatched) > 0:
-                selTeam1 = unmatched[0]
-                selTeam2 = unmatched[-1]
-                newMatch = {"Round": "B-1", "Team1": selTeam1, "Team2": selTeam2, "FinalScore": "0-0", "Text": selTeam1+" vs "+selTeam2}
-                data["gamedata"]["currentmatches"].append(newMatch)
-                unmatched.remove(selTeam1)
-                unmatched.remove(selTeam2)
+        unmatched = []
+        seed = 1
+        while seed <= seeds:
+            for i in range(len(data["gamedata"]["teamdata"])):
+                if data["gamedata"]["teamdata"][i]["Seed"] == seed:
+                    unmatched.append(data["gamedata"]["teamdata"][i]["Team"])
+                    seed += 1
+        while len(unmatched) > 0:
+            selTeam1 = unmatched[0]
+            selTeam2 = unmatched[-1]
+            newMatch = {"Round": round, "Team1": selTeam1, "Team2": selTeam2, "FinalScore": "0-0", "Text": selTeam1+" vs "+selTeam2}
+            data["gamedata"]["currentmatches"].append(newMatch)
+            unmatched.remove(selTeam1)
+            unmatched.remove(selTeam2)
 
-    def progressBracket(self, data):
-        pass
+    def progressBracket(self, data, teamCount, round):
+        spot = 1
+        spots = []
+        for i in range(len(data["gamedata"]["finishedmatches"])):
+            game = data["gamedata"]["finishedmatches"][i]
+            if game["Round"] == round-1:
+                score = game["FinalScore"].split('-')
+                team1 = game["Team1"]
+                team2 = game["Team2"]
+                if score[0] > score[1]:
+                    temp = {"name":team1}
+                    spots.append(temp)
+                else:
+                    temp = {"name":team2}
+                    spots.append(temp)
+                spot += 1
+        print(spots)
+        num = len(spots)
+        num2 = 0
+        num3 = num-1
+        while num > 0:
+            team1 = spots[num2]["name"]
+            team2 = spots[num3]["name"]
+            print(team1, team2)
+            newMatch = {"Round": round, "Team1": team1, "Team2": team2, "FinalScore": "0-0", "Text": team1+" vs "+team2}
+            data["gamedata"]["currentmatches"].append(newMatch)
+            #spots.remove(team1)
+            #spots.remove(team2)
+            num -= 2
+            num2 += 1
+            num3 -= 1
+
+    def determineWinner(self, data, round, finalRound):
+        for i in range(len(data["gamedata"]["finishedmatches"])):
+            game = data["gamedata"]["finishedmatches"][i]
+            if game["Round"] == finalRound-1:
+                score = game["FinalScore"].split('-')
+                if score[0] > score[1]:
+                    first = game["Team1"]
+                    second = game["Team2"]
+                else:
+                    first = game["Team2"]
+                    second = game["Team1"]
+                f = {"1st": first, "2nd": second}
+                data["gamedata"]["finish"].append(f)
 
 class AdminWindow(Screen):
     def submitTeams(self):
@@ -282,7 +328,6 @@ class AdminWindow(Screen):
         newTeam2 = {"Team": team2, "W/L": "0-0", "Round Robin": "0-0", "Dif": 0, "Seed": 0}
         data["gamedata"]["teamdata"].append(newTeam1)
         data["gamedata"]["teamdata"].append(newTeam2)
-
 
 class WindowManager(ScreenManager):
 	pass
