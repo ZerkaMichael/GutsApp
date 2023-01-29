@@ -109,7 +109,7 @@ class TournamentWindow(Screen):
             temp = data["gamedata"]["currentmatches"]
             data["gamedata"]["currentmatches"] = []
             data["gamedata"]["finishedmatches"] += temp
-            TournamentWindow.constructNextRound(self, round, data)
+            TournamentWindow.constructNextRound(self, round, data, temp)
             file.truncate(0)
             file.seek(0)
             json.dump(data, file, indent = 4)
@@ -154,9 +154,10 @@ class TournamentWindow(Screen):
                         print(data["gamedata"]["teamdata"][x][type])
                         data["gamedata"]["teamdata"][x]["Dif"] += dif
 
-    def constructNextRound(self, round, data):
+    def constructNextRound(self, round, data, temp):
         teams = data["gamedata"]["teams"]
         teamCount = len(teams)
+        gameCount = len(temp)
         unmatched = list(range(0,teamCount))
         match = 0
         rounds = data["gamedata"]["gamedata"][0]["rrRounds"]
@@ -176,12 +177,10 @@ class TournamentWindow(Screen):
         elif round == rounds + 1:
             TournamentWindow.seedCalculation(self, data)
             TournamentWindow.bracketBuilder(self, data, teams, teamCount, round)
-        elif round > rounds + 1 and round != teamCount:
+        elif round > rounds + 1 and gameCount != 1:
             TournamentWindow.progressBracket(self, data, teamCount, round)
-        elif round == teamCount:
-            TournamentWindow.determineWinner(self, data, round, teamCount)
-
-
+        elif gameCount == 1:
+            TournamentWindow.determineWinner(self, data, round)
 
     def seedCalculation(self, data):
         names = []
@@ -209,7 +208,7 @@ class TournamentWindow(Screen):
                     rrws.remove(rrws[pos])
                     names.remove(seedName)
 
-    def bracketBuilder(self, data, teams, seeds):
+    def bracketBuilder(self, data, teams, seeds, round):
         unmatched = []
         seed = 1
         while seed <= seeds:
@@ -257,10 +256,11 @@ class TournamentWindow(Screen):
             num2 += 1
             num3 -= 1
 
-    def determineWinner(self, data, round, finalRound):
+    def determineWinner(self, data, round):
+        round = round - 1
         for i in range(len(data["gamedata"]["finishedmatches"])):
             game = data["gamedata"]["finishedmatches"][i]
-            if game["Round"] == finalRound-1:
+            if game["Round"] == round:
                 score = game["FinalScore"].split('-')
                 if score[0] > score[1]:
                     first = game["Team1"]

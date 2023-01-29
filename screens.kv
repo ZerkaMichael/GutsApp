@@ -6,50 +6,40 @@ WindowManager:
 	AdminWindow:
 
 <HomeWindow>:
-	name: "home"
-	GridLayout:
-		cols:1
-		size: root.width, root.height
-		Label:
-			text: ''
-			font_size: 1
-			size_hint: (.1, .1)
-		Label:
-			text: "Guts App"
-			font_size: 50
-			size_hint: (.05, .05)
-		Label:
-			text: ''
-			font_size: 1
-			size_hint: (1, 1)
-		Button:
-			text: "Goto Admin Tools"
-			font_size: 32
-			size_hint: (.1, .1)
-			on_release:
-				app.root.current = "admin"
-				root.manager.transition.direction = "up"
-		Button:
-			text: "Goto Tournament"
-			font_size: 32
-			size_hint: (.1, .1)
-			on_release:
-				app.root.current = "tournament"
-				root.manager.transition.direction = "down"
-		Button:
-			text: "Goto Game Scores"
-			font_size: 32
-			size_hint: (.1, .1)
-			on_release:
-				app.root.current = "matchhistory"
-				root.manager.transition.direction = "right"
-		Button:
-			text: "Goto Score Counter"
-			font_size: 32
-			size_hint: (.1, .1)
-			on_release:
-				app.root.current = "scorecounter"
-				root.manager.transition.direction = "left"
+    name: "home"
+    GridLayout:
+        cols:1
+        size: root.width, root.height
+        Label:
+            text: "Guts App"
+            font_size: 50
+            halign: 'center'
+            valign: 'middle'
+        Button:
+            text: "Goto Admin Tools"
+            font_size: 32
+            on_release:
+                app.root.current = "admin"
+                root.manager.transition.direction = "up"
+        Button:
+            text: "Goto Tournament"
+            font_size: 32
+            on_release:
+                app.root.current = "tournament"
+                root.manager.transition.direction = "down"
+        Button:
+            text: "Goto Game Scores"
+            font_size: 32
+            on_release:
+                app.root.current = "matchhistory"
+                root.manager.transition.direction = "right"
+        Button:
+            text: "Goto Score Counter"
+            font_size: 32
+            on_release:
+                app.root.current = "scorecounter"
+                root.manager.transition.direction = "left"
+
 
 <ScoreCounterWindow>
 	name: "scorecounter"
@@ -168,6 +158,7 @@ WindowManager:
 			on_release:
 				app.root.current = "home"
 				root.manager.transition.direction = "left"
+
 
 <MatchHistoryWindow>:
 	name: "matchhistory"
