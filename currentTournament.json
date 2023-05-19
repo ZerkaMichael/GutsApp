@@ -5,7 +5,7 @@
             {
                 "rrRounds": 0,
                 "CurrentRound": 0,
-                "finals": false,
+                "finals": true,
                 "losersfinals": false,
                 "WinnerBracketWinner": "",
                 "WinnerBracketLoser": ""
