@@ -3,12 +3,19 @@
         "finish": [],
         "gamedata": [
             {
-                "rrRounds": 0
+                "rrRounds": 0,
+                "CurrentRound": 0,
+                "finals": false,
+                "losersfinals": false,
+                "WinnerBracketWinner": "",
+                "WinnerBracketLoser": ""
             }
         ],
         "teams": [],
         "teamdata": [],
         "currentmatches": [],
+        "losermatches": [],
+        "finishedlosermatches": [],
         "finishedmatches": []
     }
 }
