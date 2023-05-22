@@ -157,7 +157,7 @@ WindowManager:
                 font_size: 25
                 background_color: (0.3, 0.3, 0.3, 1)
                 on_release:
-                    root.save_match()
+                    root.submit()
 
 
 
@@ -165,23 +165,28 @@ WindowManager:
     name: "matchhistory"
     on_enter: root.updateGames()
     GridLayout:
-        cols:1
+        cols: 1
         size: root.width, root.height
+
         Label:
             text: ''
             font_size: 1
             size_hint: (.1, .1)
+
         Label:
             text: "Guts App"
             font_size: 50
             size_hint: (.05, .05)
+
         Label:
             text: ''
             font_size: 20
             size_hint: (.5, .5)
+
         GridLayout:
-            cols:4
+            cols: 4
             size: root.width, root.height
+
             Label:
                 id: match1
                 text: root.history(1)
@@ -191,7 +196,7 @@ WindowManager:
                 valign: 'middle'
                 canvas.before:
                     Color:
-                        rgba: 0.5, 0.5, 0.5, 1  # Change color
+                        rgba: 0.2, 0.2, 0.2, 1  # Dark background
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -200,16 +205,17 @@ WindowManager:
                     Line:
                         width: 1.1
                         rectangle: self.x, self.y, self.width, self.height
-			Label:
-				id: match2
-				text: root.history(2)
-				font_size: 20
-				size_hint: (1, 1)
-				halign: 'center'
-				valign: 'middle'
+
+            Label:
+                id: match2
+                text: root.history(2)
+                font_size: 20
+                size_hint: (1, 1)
+                halign: 'center'
+                valign: 'middle'
                 canvas.before:
                     Color:
-                        rgba: 0.5, 0.5, 0.5, 1  # Change color
+                        rgba: 0.2, 0.2, 0.2, 1  # Dark background
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -218,16 +224,17 @@ WindowManager:
                     Line:
                         width: 1.1
                         rectangle: self.x, self.y, self.width, self.height
-			Label:
-				id: match3
-				text: root.history(3)
-				font_size: 20
-				size_hint: (1, 1)
-				halign: 'center'
-				valign: 'middle'
+
+            Label:
+                id: match3
+                text: root.history(3)
+                font_size: 20
+                size_hint: (1, 1)
+                halign: 'center'
+                valign: 'middle'
                 canvas.before:
                     Color:
-                        rgba: 0.5, 0.5, 0.5, 1  # Change color
+                        rgba: 0.2, 0.2, 0.2, 1  # Dark background
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -236,16 +243,17 @@ WindowManager:
                     Line:
                         width: 1.1
                         rectangle: self.x, self.y, self.width, self.height
-			Label:
-				id: match4
-				text: root.history(4)
-				font_size: 20
-				size_hint: (1, 1)
-				halign: 'center'
-				valign: 'middle'
+
+            Label:
+                id: match4
+                text: root.history(4)
+                font_size: 20
+                size_hint: (1, 1)
+                halign: 'center'
+                valign: 'middle'
                 canvas.before:
                     Color:
-                        rgba: 0.5, 0.5, 0.5, 1  # Change color
+                        rgba: 0.2, 0.2, 0.2, 1  # Dark background
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -254,16 +262,17 @@ WindowManager:
                     Line:
                         width: 1.1
                         rectangle: self.x, self.y, self.width, self.height
-			Label:
-				id: match5
-				text: root.history(5)
-				font_size: 20
-				size_hint: (1, 1)
-				halign: 'center'
-				valign: 'middle'
+
+            Label:
+                id: match5
+                text: root.history(5)
+                font_size: 20
+                size_hint: (1, 1)
+                halign: 'center'
+                valign: 'middle'
                 canvas.before:
                     Color:
-                        rgba: 0.5, 0.5, 0.5, 1  # Change color
+                        rgba: 0.2, 0.2, 0.2, 1  # Dark background
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -272,16 +281,17 @@ WindowManager:
                     Line:
                         width: 1.1
                         rectangle: self.x, self.y, self.width, self.height
-			Label:
-				id: match6
-				text: root.history(6)
-				font_size: 20
-				size_hint: (1, 1)
-				halign: 'center'
-				valign: 'middle'
+
+            Label:
+                id: match6
+                text: root.history(6)
+                font_size: 20
+                size_hint: (1, 1)
+                halign: 'center'
+                valign: 'middle'
                 canvas.before:
                     Color:
-                        rgba: 0.5, 0.5, 0.5, 1  # Change color
+                        rgba: 0.2, 0.2, 0.2, 1  # Dark background
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -290,16 +300,17 @@ WindowManager:
                     Line:
                         width: 1.1
                         rectangle: self.x, self.y, self.width, self.height
-			Label:
-				id: match7
-				text: root.history(7)
-				font_size: 20
-				size_hint: (1, 1)
-				halign: 'center'
-				valign: 'middle'
+
+            Label:
+                id: match7
+                text: root.history(7)
+                font_size: 20
+                size_hint: (1, 1)
+                halign: 'center'
+                valign: 'middle'
                 canvas.before:
                     Color:
-                        rgba: 0.5, 0.5, 0.5, 1  # Change color
+                        rgba: 0.2, 0.2, 0.2, 1  # Dark background
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -308,16 +319,17 @@ WindowManager:
                     Line:
                         width: 1.1
                         rectangle: self.x, self.y, self.width, self.height
-			Label:
-				id: match8
-				text: root.history(8)
-				font_size: 20
-				size_hint: (1, 1)
-				halign: 'center'
-				valign: 'middle'
+
+            Label:
+                id: match8
+                text: root.history(8)
+                font_size: 20
+                size_hint: (1, 1)
+                halign: 'center'
+                valign: 'middle'
                 canvas.before:
                     Color:
-                        rgba: 0.5, 0.5, 0.5, 1  # Change color
+                        rgba: 0.2, 0.2, 0.2, 1  # Dark background
                     Rectangle:
                         size: self.size
                         pos: self.pos
@@ -326,26 +338,30 @@ WindowManager:
                     Line:
                         width: 1.1
                         rectangle: self.x, self.y, self.width, self.height
+
         Label:
             text: ''
             font_size: 20
             size_hint: (1, 1)
+
         Button:
             text: "Goto home"
             font_size: 32
             size_hint: (.25, .25)
-            background_color: 0.5, 0.5, 0.5, 1  # Change color
+            background_color: 0.3, 0.3, 0.3, 1  # Darker button
             on_release:
                 app.root.current = "home"
                 root.manager.transition.direction = "left"
+
         Button:
             text: "Goto Score Counter"
             font_size: 32
             size_hint: (.25, .25)
-            background_color: 0.5, 0.5, 0.5, 1  # Change color
+            background_color: 0.3, 0.3, 0.3, 1  # Darker button
             on_release:
                 app.root.current = "scorecounter"
                 root.manager.transition.direction = "right"
+
 
 
 
@@ -357,7 +373,7 @@ WindowManager:
 	BoxLayout:
         orientation: 'vertical'
         spacing: 10
-        padding: [30, 30, 30, 30]
+        padding: [3, 3, 3, 3]
 
         Label:
             text: "Guts App"
@@ -402,7 +418,7 @@ WindowManager:
         BoxLayout:
             orientation: 'horizontal'
             spacing: 20
-            size_hint_y: .2
+            size_hint_y: .5
 
             BoxLayout:
                 orientation: 'vertical'
@@ -411,24 +427,31 @@ WindowManager:
                     text: "Current Matches"
                     values: root.teamList
                     on_text: root.matchSelection(self.text, 1)
+                    background_color: [0.2, 0.2, 0.2, 1]  # Dark background
+                    color: [1, 1, 1, 1]  # White text
 
                 Spinner:
                     id: "loser_current_matches"
                     text: "Current Loser Matches"
                     values: root.loserTeamList
                     on_text: root.matchSelection(self.text, 2)
-
+                    background_color: [0.2, 0.2, 0.2, 1]  # Dark background
+                    color: [1, 1, 1, 1]  # White text
             BoxLayout:
                 orientation: 'vertical'
                 Spinner:
                     id: "finished_matches"
                     text: "Finished Matches"
                     values: root.finishedTeamList
+                    background_color: [0.2, 0.2, 0.2, 1]  # Dark background
+                    color: [1, 1, 1, 1]  # White text
 
                 Spinner:
                     id: "loser_finished_matches"
                     text: "Finished Loser Matches"
                     values: root.loserFinishedTeamList
+                    background_color: [0.2, 0.2, 0.2, 1]  # Dark background
+                    color: [1, 1, 1, 1]  # White text
 
         BoxLayout:
             size_hint_y: .1
@@ -457,74 +480,73 @@ WindowManager:
 
 <AdminWindow>:
     name: "admin"
-    GridLayout:
-        cols:1
-        size: root.width, root.height
-        Label:
-            text: ''
-            font_size: 1
-            size_hint: (.1, .1)
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 10
+        padding: 10
         Label:
             text: "Guts App"
             font_size: 50
-            size_hint: (.05, .05)
-        Label:
-            text: ''
-            font_size: 20
-            size_hint: (.5, .5)
+            color: [1,1,1,1]  # White text
+            size_hint: (1, .1)
+
         GridLayout:
             cols:2
-            size: root.width, root.height
+            size_hint: (1, .15)
+            spacing: 10
             TextInput:
                 id: team_input
                 font_size: 32
-                multiline:False
+                multiline: False
                 text: "Enter Team Name"
                 halign: 'center'
-                valign: 'middle'
-                size_hint: (1, 1)
-                background_color: 0.9, 0.9, 0.9, 1  # Change color
+                background_color: [0.2, 0.2, 0.2, 1]  # Dark background
+                foreground_color: [1,1,1,1]  # White text
             Button:
                 text: "Submit Team"
                 font_size: 20
-                size_hint: (1, 1)
-                halign: 'center'
-                valign: 'middle'
-                background_color: 0.5, 0.5, 0.5, 1  # Change color
+                background_color: [0.3, 0.3, 0.3, 1]  # Darker button
+                color: [1,1,1,1]  # White text
                 on_press: root.submitTeams()
+
         Spinner:
             id: "remove_team"
             text: "Remove Team"
             values: root.getTeams()
             on_text: root.removeTeam(self.text)
-            background_color: 0.9, 0.9, 0.9, 1  # Change color
+            size_hint: (1, .1)
+            background_color: [0.2, 0.2, 0.2, 1]  # Dark background
+            color: [1,1,1,1]  # White text
+
         TextInput:
             id: roundrobin_rounds
             font_size: 25
-            multiline:False
+            multiline: False
             text:'Round Robin Rounds'
             halign: 'center'
-            valign: 'middle'
-            size_hint: (.7, .7)
-            background_color: 0.9, 0.9, 0.9, 1  # Change color
+            size_hint: (1, .1)
+            background_color: [0.2, 0.2, 0.2, 1]  # Dark background
+            foreground_color: [1,1,1,1]  # White text
+
         Button:
             text: "Start Tournament"
             font_size: 32
-            size_hint: (.25, .25)
-            background_color: 0.5, 0.5, 0.5, 1  # Change color
+            size_hint: (1, .1)
+            background_color: [0.3, 0.3, 0.3, 1]  # Darker button
+            color: [1,1,1,1]  # White text
             on_press: root.startTournament()
             on_release:
                 app.root.current = "home"
                 root.manager.transition.direction = "down"
-        Label:
-            text: ''
-            font_size: 20
-            size_hint: (1, 1)
+
+        BoxLayout:
+            size_hint: (1, .05)
         Button:
             text: "Goto home"
             font_size: 32
-            size_hint: (.25, .25)
-            background_color: 0.5, 0.5, 0.5, 1  # Change color
+            size_hint: (1, .1)
+            background_color: [0.3, 0.3, 0.3, 1]  # Darker button
+            color: [1,1,1,1]  # White text
             on_release:
                 app.root.current = "home"
                 root.manager.transition.direction = "left"

@@ -7,7 +7,7 @@ class ScoreCounterWindow(Screen):
     def submit(self):
         game = {'Team1': self.ids.team1_name.text, 'Team2': self.ids.team2_name.text,
                 'Score1': self.ids.score1_input.text, 'Score2': self.ids.score2_input.text}
-        with open('../scores.json', 'r+') as file:
+        with open('scores.json', 'r+') as file:
             data = json.load(file)
             data["games"].append(game)
             file.seek(0)
