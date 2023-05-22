@@ -97,7 +97,7 @@ class TournamentWindow(Screen):
             loserMatches = data["gamedata"]["losermatches"]
             if len(currentMatches) in [3, 0] and currentRound > rrRounds:
                 if finals is True:
-                    TournamentWindow.determineWinner(self, data, finals)
+                    TournamentWindow.determineWinner(data, finals)
 
                     # Adjust record and move games to finished for winners bracket
                     temp = data["gamedata"]["currentmatches"]
@@ -106,7 +106,7 @@ class TournamentWindow(Screen):
 
                 if len(currentMatches) == 3 and finals is False:
                     # Find the winner of losers finals
-                    TournamentWindow.determineWinner(self, data, finals)
+                    TournamentWindow.determineWinner(data, finals)
 
                     # Adjust record and move games to finished for winners bracket
                     TournamentWindow.wlHandler(self, data, 1)
@@ -116,7 +116,7 @@ class TournamentWindow(Screen):
 
                 if len(currentMatches) == 3 and data["gamedata"]["gamedata"][0]["WinnerBracketWinner"] == '':
                     # Find the winner of losers finals
-                    TournamentWindow.determineWinner(self, data, finals)
+                    TournamentWindow.determineWinner(data, finals)
 
                     # Adjust record and move games to finished for winners bracket
                     TournamentWindow.wlHandler(self, data, 1)
@@ -200,163 +200,55 @@ class TournamentWindow(Screen):
                 file.seek(0)
                 json.dump(data, file, indent=4)
 
+    def updateTeamData(self, teamName, type, score, dif, data):
+        for i in range(len(data["gamedata"]["teamdata"])):
+            if data["gamedata"]["teamdata"][i]["Team"] == teamName:
+                newWL = data["gamedata"]["teamdata"][i][type].split('-')
+                win = int(newWL[0])
+                loss = int(newWL[1])
+                if score == 1:  # win
+                    win += 1
+                else:  # loss
+                    loss += 1
+                data["gamedata"]["teamdata"][i][type] = str(win) + "-" + str(loss)
+                data["gamedata"]["teamdata"][i]["Dif"] += dif if score == 1 else -dif
+                print(data["gamedata"]["teamdata"][i][type])
+
+    def handleScores(self, score, team1Name, team2Name, type, data):
+        dif = abs(int(score[0]) - int(score[1]))
+        print(score)
+        if int(score[0]) >= 21 and int(score[0]) > int(score[1]):
+            self.updateTeamData(team1Name, type, 1, dif, data)  # team1 won
+            self.updateTeamData(team2Name, type, 0, dif, data)  # team2 lost
+        elif int(score[1]) >= 21 and int(score[1]) > int(score[0]):
+            self.updateTeamData(team1Name, type, 0, dif, data)  # team1 lost
+            self.updateTeamData(team2Name, type, 1, dif, data)  # team2 won
+
     def wlHandler(self, data, type):
         if type == 0:
             type = "Round Robin"
-            for i in range(len(data["gamedata"]["currentmatches"])):
-                score = data["gamedata"]["currentmatches"][i]["FinalScore"].split('-')
-                team1Name = data["gamedata"]["currentmatches"][i]["Team1"]
-                team2Name = data["gamedata"]["currentmatches"][i]["Team2"]
-                dif = abs(int(score[0]) - int(score[1]))
-                print(score)
-                for x in range(len(data["gamedata"]["teamdata"])):
-                    if data["gamedata"]["teamdata"][x]["Team"] == team1Name:
-                        if int(score[0]) >= 21 & int(score[0]) > int(score[1]):
-                            newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                            temp = int(newWL[0]) + 1
-                            data["gamedata"]["teamdata"][x][type] = str(temp) + "-" + str(newWL[1])
-                            data["gamedata"]["teamdata"][x]["Dif"] += dif
-                            print(data["gamedata"]["teamdata"][x][type])
-                        elif int(score[1]) >= 21 & int(score[1]) > int(score[0]):
-                            newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                            temp = int(newWL[1]) + 1
-                            data["gamedata"]["teamdata"][x][type] = str(newWL[0]) + "-" + str(temp)
-                            print(data["gamedata"]["teamdata"][x][type])
-                            data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                    elif data["gamedata"]["teamdata"][x]["Team"] == team2Name:
-                        if int(score[0]) >= 21 & int(score[0]) > int(score[1]):
-                            newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                            temp = int(newWL[1]) + 1
-                            data["gamedata"]["teamdata"][x][type] = str(newWL[0]) + "-" + str(temp)
-                            data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                            print(data["gamedata"]["teamdata"][x][type])
-                        elif int(score[1]) >= 21 & int(score[1]) > int(score[0]):
-                            newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                            temp = int(newWL[0]) + 1
-                            data["gamedata"]["teamdata"][x][type] = str(temp) + "-" + str(newWL[1])
-                            print(data["gamedata"]["teamdata"][x][type])
-                            data["gamedata"]["teamdata"][x]["Dif"] += dif
-        elif type == 1:
+            for match in data["gamedata"]["currentmatches"]:
+                score = match["FinalScore"].split('-')
+                self.handleScores(score, match["Team1"], match["Team2"], type, data)
+        elif type == 1:  # Best of 3 series
             type = "W/L"
             for i in range(len(data["gamedata"]["currentmatches"])):
-                game = data["gamedata"]["currentmatches"][i]
-                match = game["Text"].split("|")
-                match = match[1]
-                match = game["Text"].split(": ")
-                match = match[1]
-                score = game["FinalScore"].split('-')
-                team1Name = data["gamedata"]["currentmatches"][i]["Team1"]
-                team2Name = data["gamedata"]["currentmatches"][i]["Team2"]
-                dif = abs(int(score[0]) - int(score[1]))
-                print(score)
-                print(match)
-                if int(match) == 3:
-                    if int(score[0]) != 0 and int(score[1]) != 0:
-                        for x in range(len(data["gamedata"]["teamdata"])):
-                            if data["gamedata"]["teamdata"][x]["Team"] == team1Name:
-                                if int(score[0]) >= 21 and int(score[0]) > int(score[1]):
-                                    newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                                    temp = int(newWL[0]) + 1
-                                    data["gamedata"]["teamdata"][x][type] = str(temp) + "-" + str(newWL[1])
-                                    data["gamedata"]["teamdata"][x]["Dif"] += dif
-                                    print(data["gamedata"]["teamdata"][x][type])
-                                elif int(score[1]) >= 21 and int(score[1]) > int(score[0]):
-                                    newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                                    temp = int(newWL[1]) + 1
-                                    data["gamedata"]["teamdata"][x][type] = str(newWL[0]) + "-" + str(temp)
-                                    print(data["gamedata"]["teamdata"][x][type])
-                                    data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                            elif data["gamedata"]["teamdata"][x]["Team"] == team2Name:
-                                if int(score[0]) >= 21 and int(score[0]) > int(score[1]):
-                                    newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                                    temp = int(newWL[1]) + 1
-                                    data["gamedata"]["teamdata"][x][type] = str(newWL[0]) + "-" + str(temp)
-                                    data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                                    print(data["gamedata"]["teamdata"][x][type])
-                                elif int(score[1]) >= 21 and int(score[1]) > int(score[0]):
-                                    newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                                    temp = int(newWL[0]) + 1
-                                    data["gamedata"]["teamdata"][x][type] = str(temp) + "-" + str(newWL[1])
-                                    print(data["gamedata"]["teamdata"][x][type])
-                                    data["gamedata"]["teamdata"][x]["Dif"] += dif
-                    elif int(score[0]) == 0 and int(score[1]) == 0:
-                        game = data["gamedata"]["currentmatches"][i - 1]
-                        match = game["Text"].split("|")
-                        match = match[1]
-                        match = game["Text"].split(": ")
-                        match = match[1]
-                        score = game["FinalScore"].split('-')
-                        team1 = game["Team1"]
-                        team2 = game["Team2"]
-                        print(score)
-                        print(match)
-                        if int(match) == 2 and int(score[0]) != 0 or int(score[1]) != 0:
-                            for x in range(len(data["gamedata"]["teamdata"])):
-                                if data["gamedata"]["teamdata"][x]["Team"] == team1:
-                                    if int(score[0]) >= 21 and int(score[0]) > int(score[1]):
-                                        print("AB")
-                                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                                        temp = int(newWL[0]) + 1
-                                        data["gamedata"]["teamdata"][x][type] = str(temp) + "-" + str(newWL[1])
-                                        data["gamedata"]["teamdata"][x]["Dif"] += dif
-                                        print(data["gamedata"]["teamdata"][x][type])
-                                    elif int(score[1]) >= 21 and int(score[1]) > int(score[0]):
-                                        print("CD")
-                                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                                        temp = int(newWL[1]) + 1
-                                        data["gamedata"]["teamdata"][x][type] = str(newWL[0]) + "-" + str(temp)
-                                        print(data["gamedata"]["teamdata"][x][type])
-                                        data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                                elif data["gamedata"]["teamdata"][x]["Team"] == team2:
-                                    if int(score[0]) >= 21 and int(score[0]) > int(score[1]):
-                                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                                        print("EF")
-                                        temp = int(newWL[1]) + 1
-                                        data["gamedata"]["teamdata"][x][type] = str(newWL[0]) + "-" + str(temp)
-                                        data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                                        print(data["gamedata"]["teamdata"][x][type])
-                                    elif int(score[1]) >= 21 and int(score[1]) > int(score[0]):
-                                        newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                                        temp = int(newWL[0]) + 1
-                                        print("GH")
-                                        data["gamedata"]["teamdata"][x][type] = str(temp) + "-" + str(newWL[1])
-                                        print(data["gamedata"]["teamdata"][x][type])
-                                        data["gamedata"]["teamdata"][x]["Dif"] += dif
-        if type == 3:
+                match = data["gamedata"]["currentmatches"][i]
+                match_text = match["Text"].split(": ")[1]
+                score = match["FinalScore"].split('-')
+                print(match_text)
+                if int(match_text) == 3:  # Series went to 3 games
+                    if int(score[0]) != 0 or int(score[1]) != 0:  # If the score for the third game is not 0-0
+                        self.handleScores(score, match["Team1"], match["Team2"], type, data)
+                    else:  # If the score for the third game is 0-0, use the second game
+                        previous_match = data["gamedata"]["currentmatches"][i - 1]
+                        score = previous_match["FinalScore"].split('-')
+                        self.handleScores(score, previous_match["Team1"], previous_match["Team2"], type, data)
+        elif type == 3:
             type = "W/L"
-            for i in range(len(data["gamedata"]["losermatches"])):
-                score = data["gamedata"]["losermatches"][i]["FinalScore"].split('-')
-                team1Name = data["gamedata"]["losermatches"][i]["Team1"]
-                team2Name = data["gamedata"]["losermatches"][i]["Team2"]
-                dif = abs(int(score[0]) - int(score[1]))
-                print(score)
-                for x in range(len(data["gamedata"]["teamdata"])):
-                    if data["gamedata"]["teamdata"][x]["Team"] == team1Name:
-                        if int(score[0]) >= 21 & int(score[0]) > int(score[1]):
-                            newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                            temp = int(newWL[0]) + 1
-                            data["gamedata"]["teamdata"][x][type] = str(temp) + "-" + str(newWL[1])
-                            data["gamedata"]["teamdata"][x]["Dif"] += dif
-                            print(data["gamedata"]["teamdata"][x][type])
-                        elif int(score[1]) >= 21 & int(score[1]) > int(score[0]):
-                            newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                            temp = int(newWL[1]) + 1
-                            data["gamedata"]["teamdata"][x][type] = str(newWL[0]) + "-" + str(temp)
-                            print(data["gamedata"]["teamdata"][x][type])
-                            data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                    elif data["gamedata"]["teamdata"][x]["Team"] == team2Name:
-                        if int(score[0]) >= 21 & int(score[0]) > int(score[1]):
-                            newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                            temp = int(newWL[1]) + 1
-                            data["gamedata"]["teamdata"][x][type] = str(newWL[0]) + "-" + str(temp)
-                            data["gamedata"]["teamdata"][x]["Dif"] -= dif
-                            print(data["gamedata"]["teamdata"][x][type])
-                        elif int(score[1]) >= 21 & int(score[1]) > int(score[0]):
-                            newWL = data["gamedata"]["teamdata"][x][type].split('-')
-                            temp = int(newWL[0]) + 1
-                            data["gamedata"]["teamdata"][x][type] = str(temp) + "-" + str(newWL[1])
-                            print(data["gamedata"]["teamdata"][x][type])
-                            data["gamedata"]["teamdata"][x]["Dif"] += dif
+            for match in data["gamedata"]["losermatches"]:
+                score = match["FinalScore"].split('-')
+                self.handleScores(score, match["Team1"], match["Team2"], type, data)
 
     def constructNextRound(self, round, data, temp):
         teams = data["gamedata"]["teams"]

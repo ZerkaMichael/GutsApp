@@ -18,7 +18,7 @@ class AdminWindow(Screen):
             data = json.load(file)
             return data["gamedata"]["teams"]
 
-    def removeTeam(team):
+    def removeTeam(self, team):
         with open('currentTournament.json', 'r+') as file:
             data = json.load(file)
             if team in data["gamedata"]["teams"]:
