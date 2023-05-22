@@ -510,13 +510,14 @@ WindowManager:
                 on_press: root.submitTeams()
 
         Spinner:
-            id: "remove_team"
+            id: remove_team
             text: "Remove Team"
             values: root.getTeams()
+            on_release: root.updateTeamValues()
             on_text: root.removeTeam(self.text)
             size_hint: (1, .1)
             background_color: [0.2, 0.2, 0.2, 1]  # Dark background
-            color: [1,1,1,1]  # White text
+            color: [1, 1, 1, 1]  # White text
 
         TextInput:
             id: roundrobin_rounds

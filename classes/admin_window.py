@@ -5,6 +5,10 @@ from kivy.uix.screenmanager import Screen
 
 
 class AdminWindow(Screen):
+    def updateTeamValues(self):
+        spinner = self.ids.remove_team
+        spinner.values = self.getTeams()
+
     def submitTeams(self):
         with open('currentTournament.json', 'r+') as file:
             data = json.load(file)
