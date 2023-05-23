@@ -25,7 +25,6 @@ Guts App is a tournament management application designed for organizing and trac
 ## Screenshots
 
 ![Guts App Demo](img/githubdemo.gif)
-(Add any additional screenshots or GIFs to showcase your application.)
 
 ## Contributing
 
