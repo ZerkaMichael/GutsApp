@@ -37,7 +37,6 @@ This project is licensed under the MIT License.
 ## Acknowledgements
 
 - [Kivy](https://kivy.org) - Open-source Python framework for developing multitouch applications.
-- [OpenAI](https://openai.com) - Provider of the language model used to generate this README.
 
 ## Contact
 
